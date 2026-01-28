@@ -81,7 +81,7 @@ export const usePreferencesStore = create<PreferencesState>()(
     }),
     {
       name: "user-preferences",
-      version: 2, // Bump version to trigger migration
+      version: 3, // Bump version to trigger migration
       migrate: (persistedState, version) => {
         const state = persistedState as PreferencesState;
         if (version < 2) {
@@ -90,6 +90,10 @@ export const usePreferencesStore = create<PreferencesState>()(
           if (layout === 'side' || layout === 'bottom' || !['left', 'right', 'bottom'].includes(layout)) {
             state.controlsLayout = 'right';
           }
+        }
+        if (version < 3) {
+          // Force layout to bottom for all users to align with new default
+          state.controlsLayout = "bottom";
         }
         return state;
       },
