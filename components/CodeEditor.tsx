@@ -1,9 +1,10 @@
-import { cn } from "@/lib/utils";
 import flourite from "flourite";
-import { codeSnippets, fonts, themes } from "@/options";
 import hljs from "highlight.js";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo,useState } from "react";
 import Editor from "react-simple-code-editor";
+
+import { cn } from "@/lib/utils";
+import { codeSnippets, fonts, themes } from "@/options";
 import { usePreferencesStore, WindowFrame } from "@/store/use-preferences-store";
 
 // Stable default snippet for SSR (first snippet in array)
@@ -94,7 +95,7 @@ export default function CodeEditor() {
   return (
     <div
       className={cn(
-        "border-2 rounded-xl transition-all duration-300 overflow-hidden",
+        "border-2 rounded-lg transition-all duration-300 overflow-hidden",
         store.darkMode
           ? "bg-black/75 border-gray-600/40"
           : "bg-white/75 border-gray-200/20"
@@ -112,20 +113,22 @@ export default function CodeEditor() {
         >
           {store.windowFrame !== "windows" && FrameComponent && <FrameComponent />}
           <div className="flex-1 flex justify-center">
-            <input
-              type="text"
-              value={store.title}
-              onChange={(e) =>
-                usePreferencesStore.setState({ title: e.target.value })
-              }
-              spellCheck={false}
-              onClick={(e) => {
-                if (e.target instanceof HTMLInputElement) {
-                  e.target.select();
+            {store.contentMode === "code" && (
+              <input
+                type="text"
+                value={store.title}
+                onChange={(e) =>
+                  usePreferencesStore.setState({ title: e.target.value })
                 }
-              }}
-              className="bg-transparent text-center text-gray-400 text-sm font-medium focus:outline-none transition-colors hover:text-gray-300 max-w-[200px]"
-            />
+                spellCheck={false}
+                onClick={(e) => {
+                  if (e.target instanceof HTMLInputElement) {
+                    e.target.select();
+                  }
+                }}
+                className="bg-transparent text-center text-gray-400 text-sm font-medium focus:outline-none transition-colors hover:text-gray-300 max-w-[200px]"
+              />
+            )}
           </div>
           {store.windowFrame === "windows" && <WindowsFrame />}
           {store.windowFrame !== "windows" && <div className="w-12" />}
@@ -158,30 +161,45 @@ export default function CodeEditor() {
         )}
         <div
           className={cn(
-            "flex-1 min-w-0 overflow-hidden mb-2 transition-all ease-out duration-300 rounded-xl",
+            "flex-1 min-w-0 overflow-hidden mb-2 transition-all ease-out duration-300 rounded-lg",
             store.darkMode
               ? "brightness-110"
               : "text-gray-800 brightness-50 saturate-200 contrast-200"
           )}
         >
-          <Editor
-            value={displayCode}
-            onValueChange={(code) => usePreferencesStore.setState({ code })}
-            highlight={(code) =>
-              hljs.highlight(code, { language: displayLanguage || "plaintext" })
-                .value
-            }
-            style={{
-              fontFamily: fonts[store.fontStyle as keyof typeof fonts].name,
-              fontSize: store.fontSize,
-            }}
-            textareaClassName="focus:outline-none"
-            onClick={(e) => {
-              if (e.target instanceof HTMLTextAreaElement) {
-                e.target.select();
+          {store.contentMode === "image" && store.customImage ? (
+            <div className="relative w-full h-full flex items-center justify-center bg-transparent">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={store.customImage}
+                alt="Custom content"
+                className="max-w-full h-auto rounded-lg"
+                style={{
+                  maxHeight: "600px", // Prevent massive images from taking over
+                }}
+              />
+            </div>
+          ) : (
+            <Editor
+              value={displayCode}
+              onValueChange={(code) => usePreferencesStore.setState({ code })}
+              highlight={(code) =>
+                hljs.highlight(code, {
+                  language: displayLanguage || "plaintext",
+                }).value
               }
-            }}
-          />
+              style={{
+                fontFamily: fonts[store.fontStyle as keyof typeof fonts].name,
+                fontSize: store.fontSize,
+              }}
+              textareaClassName="focus:outline-none"
+              onClick={(e) => {
+                if (e.target instanceof HTMLTextAreaElement) {
+                  e.target.select();
+                }
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

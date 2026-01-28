@@ -19,6 +19,8 @@ interface PreferencesState {
   showLineNumbers: boolean;
   windowFrame: WindowFrame;
   controlsLayout: ControlsLayout;
+  customImage: string | null;
+  contentMode: 'code' | 'image';
 
   // Setters
   setCode: (code: string) => void;
@@ -34,6 +36,8 @@ interface PreferencesState {
   toggleLineNumbers: () => void;
   setWindowFrame: (frame: WindowFrame) => void;
   setControlsLayout: (layout: ControlsLayout) => void;
+  setCustomImage: (image: string | null) => void;
+  setContentMode: (mode: 'code' | 'image') => void;
 }
 
 // Create a persistent Zustand store with type safety and update methods
@@ -52,7 +56,9 @@ export const usePreferencesStore = create<PreferencesState>()(
       padding: 64,
       showLineNumbers: false,
       windowFrame: "macos",
-      controlsLayout: "right",
+      controlsLayout: "bottom",
+      customImage: null,
+      contentMode: "code",
 
       // Setters
       setCode: (code) => set({ code }),
@@ -70,6 +76,8 @@ export const usePreferencesStore = create<PreferencesState>()(
         set((state) => ({ showLineNumbers: !state.showLineNumbers })),
       setWindowFrame: (frame) => set({ windowFrame: frame }),
       setControlsLayout: (layout) => set({ controlsLayout: layout }),
+      setCustomImage: (image) => set({ customImage: image, contentMode: 'image' }), // Auto-switch to image mode
+      setContentMode: (mode) => set({ contentMode: mode }),
     }),
     {
       name: "user-preferences",
@@ -85,6 +93,10 @@ export const usePreferencesStore = create<PreferencesState>()(
         }
         return state;
       },
+      partialize: (state) => ({
+        ...state,
+        customImage: null, // Do not persist the large image string
+      }),
     }
   )
 );
