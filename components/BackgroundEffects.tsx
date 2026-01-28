@@ -11,6 +11,7 @@ export default function BackgroundEffects() {
   const currentTheme = themes[theme as keyof typeof themes];
   // Extract a color from the theme or defaults if complex gradient
   // Check if glow color exists in theme options (added in previous step)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const glowColor = (currentTheme as any).glow || "rgba(100, 100, 100, 0.2)";
 
   // Parse glow color to get RGB values for the blob gradients
