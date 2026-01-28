@@ -2,7 +2,9 @@
 
 Prism is a modern, beautiful tool for creating stunning code snippets. Transform your code into sharable, exportable images with a sleek, customizable interface.
 
-![Prism Screenshot](/Users/raghular/.gemini/antigravity/brain/cee6845d-8d58-47bd-9bf3-2f8964ab2aa3/glassmorphism_sidebar_verification_1769592514007.png)
+[**Live Demo**](https://prism12.vercel.app/)
+
+![Prism Screenshot](/screenshot.png)
 
 ## Features
 
