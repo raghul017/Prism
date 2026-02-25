@@ -1,37 +1,39 @@
-import { languages } from "@/options";
+import { MagicWandIcon } from "@radix-ui/react-icons"
+
+import { languages } from "@/options"
+import { usePreferencesStore } from "@/store/use-preferences-store"
+
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { usePreferencesStore } from "@/store/use-preferences-store";
-import { MagicWandIcon } from "@radix-ui/react-icons";
+} from "../ui/select"
 
 export default function LanguageSelect() {
-  const language = usePreferencesStore((state) => state.language);
+  const language = usePreferencesStore(state => state.language)
   const autoDetectLanguage = usePreferencesStore(
-    (state) => state.autoDetectLanguage
-  );
+    state => state.autoDetectLanguage,
+  )
 
   const handleChange = (language: string) => {
     if (language === "auto-detect") {
       usePreferencesStore.setState({
         autoDetectLanguage: true,
         language: "plaintext",
-      });
+      })
     } else {
-      usePreferencesStore.setState({ autoDetectLanguage: false, language });
+      usePreferencesStore.setState({ autoDetectLanguage: false, language })
     }
-  };
+  }
   return (
     <div>
-      <label className="block mb-2 text-xs font-medium text-neutral-400">
+      <label className="mb-2 block text-xs font-medium text-neutral-400">
         Language
       </label>
       <Select value={language} onValueChange={handleChange}>
-        <SelectTrigger className="w-40">
+        <SelectTrigger className="w-full">
           {autoDetectLanguage && <MagicWandIcon className="mr-2" />}
           <SelectValue placeholder="Select Language" />
         </SelectTrigger>
@@ -45,5 +47,5 @@ export default function LanguageSelect() {
         </SelectContent>
       </Select>
     </div>
-  );
+  )
 }

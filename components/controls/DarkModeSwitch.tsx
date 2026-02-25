@@ -1,4 +1,5 @@
 import { usePreferencesStore } from "@/store/use-preferences-store";
+
 import { Switch } from "../ui/switch";
 
 export default function DarkModeSwitch() {

@@ -1,4 +1,10 @@
+import { toBlob, toPng, toSvg } from "html-to-image";
 import { DownloadIcon, ImageIcon, Link2Icon, Share2Icon } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { useHotkeys } from "react-hotkeys-hook";
+
+import { usePreferencesStore } from "@/store/use-preferences-store";
+
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -8,10 +14,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { toast } from "react-hot-toast";
-import { toBlob, toPng, toSvg } from "html-to-image";
-import { usePreferencesStore } from "@/store/use-preferences-store";
-import { useHotkeys } from "react-hotkeys-hook";
 
 export default function ExportOptions({
   targetRef,

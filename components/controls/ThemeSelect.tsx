@@ -1,7 +1,8 @@
-import { themes } from "@/options";
-import { cn } from "@/lib/utils";
-import { usePreferencesStore } from "@/store/use-preferences-store";
 import { CheckIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { themes } from "@/options";
+import { usePreferencesStore } from "@/store/use-preferences-store";
 
 export default function ThemeSelect() {
   const theme = usePreferencesStore((state) => state.theme);

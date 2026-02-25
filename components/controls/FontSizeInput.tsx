@@ -1,4 +1,5 @@
 import { usePreferencesStore } from "@/store/use-preferences-store";
+
 import { Input } from "../ui/input";
 
 export default function FontSizeInput() {
