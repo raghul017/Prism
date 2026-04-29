@@ -1,7 +1,7 @@
 export const languages: Record<string, string> = {
   bash: "Bash",
   c: "C",
-  "c++": "C++",
+  cpp: "C++",
   csharp: "C#",
   clojure: "Clojure",
   crystal: "Crystal",

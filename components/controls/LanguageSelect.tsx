@@ -32,7 +32,7 @@ export default function LanguageSelect() {
       <label className="mb-2 block text-xs font-medium text-neutral-400">
         Language
       </label>
-      <Select value={language} onValueChange={handleChange}>
+      <Select value={autoDetectLanguage ? "auto-detect" : language} onValueChange={handleChange}>
         <SelectTrigger className="w-full">
           {autoDetectLanguage && <MagicWandIcon className="mr-2" />}
           <SelectValue placeholder="Select Language" />

@@ -183,11 +183,15 @@ export default function CodeEditor() {
             <Editor
               value={displayCode}
               onValueChange={(code) => usePreferencesStore.setState({ code })}
-              highlight={(code) =>
-                hljs.highlight(code, {
-                  language: displayLanguage || "plaintext",
-                }).value
-              }
+              highlight={(code) => {
+                try {
+                  return hljs.highlight(code, {
+                    language: displayLanguage || "plaintext",
+                  }).value
+                } catch {
+                  return hljs.highlight(code, { language: "plaintext" }).value
+                }
+              }}
               style={{
                 fontFamily: fonts[store.fontStyle as keyof typeof fonts].name,
                 fontSize: store.fontSize,

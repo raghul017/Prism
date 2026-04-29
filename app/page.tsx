@@ -63,6 +63,37 @@ function Separator({ vertical = false }: { vertical?: boolean }) {
 
 import BackgroundEffects from "@/components/BackgroundEffects"
 
+function SidePanel({
+  side,
+  children,
+}: {
+  side: "left" | "right"
+  children: React.ReactNode
+}) {
+  return (
+    <aside
+      className={cn(
+        "h-screen w-80 min-w-80 overflow-y-auto",
+        "bg-neutral-900/60 backdrop-blur-3xl backdrop-saturate-150",
+        "border-neutral-500/20",
+        side === "left" ? "rounded-r-3xl border-r" : "rounded-l-3xl border-l",
+        "shadow-2xl shadow-black/60",
+        "ring-1 ring-white/5 ring-inset",
+      )}
+    >
+      <div className="sticky top-0 z-10 border-b border-white/10 bg-gradient-to-b from-neutral-800/80 to-transparent px-4 py-3 backdrop-blur-xl">
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-lg shadow-purple-500/20" />
+          <h2 className="text-sm font-semibold tracking-wide text-neutral-100">
+            Prism
+          </h2>
+        </div>
+      </div>
+      <div className="flex flex-col gap-4 p-4">{children}</div>
+    </aside>
+  )
+}
+
 function App() {
   const [width, setWidth] = useState("auto")
   const [showWidth, setShowWidth] = useState(false)
@@ -171,34 +202,6 @@ function App() {
     </>
   )
 
-  // Figma-like sidebar component with glassmorphism
-  const SidePanel = ({ side }: { side: "left" | "right" }) => (
-    <aside
-      className={cn(
-        "h-screen w-80 min-w-80 overflow-y-auto",
-        // Glassmorphism effect
-        "bg-neutral-900/60 backdrop-blur-3xl backdrop-saturate-150",
-        "border-neutral-500/20",
-        side === "left" ? "rounded-r-3xl border-r" : "rounded-l-3xl border-l",
-        // Shadow and glow
-        "shadow-2xl shadow-black/60",
-        "ring-1 ring-white/5 ring-inset",
-      )}
-    >
-      {/* Header with subtle gradient */}
-      <div className="sticky top-0 z-10 border-b border-white/10 bg-gradient-to-b from-neutral-800/80 to-transparent px-4 py-3 backdrop-blur-xl">
-        <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-lg shadow-purple-500/20" />
-          <h2 className="text-sm font-semibold tracking-wide text-neutral-100">
-            Prism
-          </h2>
-        </div>
-      </div>
-      {/* Scrollable content */}
-      <div className="flex flex-col gap-4 p-4">{controlsContent}</div>
-    </aside>
-  )
-
   return (
     <main className="dark flex min-h-screen bg-neutral-950 text-white">
       <link
@@ -215,7 +218,9 @@ function App() {
       <BackgroundEffects />
 
       {/* Left Side Panel */}
-      {controlsLayout === "left" && <SidePanel side="left" />}
+      {controlsLayout === "left" && (
+        <SidePanel side="left">{controlsContent}</SidePanel>
+      )}
 
       {/* Main Content Area */}
       <div
@@ -305,7 +310,9 @@ function App() {
       </div>
 
       {/* Right Side Panel */}
-      {controlsLayout === "right" && <SidePanel side="right" />}
+      {controlsLayout === "right" && (
+        <SidePanel side="right">{controlsContent}</SidePanel>
+      )}
     </main>
   )
 }
