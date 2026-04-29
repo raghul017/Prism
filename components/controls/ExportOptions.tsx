@@ -18,7 +18,7 @@ import {
 export default function ExportOptions({
   targetRef,
 }: {
-  targetRef: React.RefObject<HTMLDivElement>;
+  targetRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const title = usePreferencesStore((state) => state.title);
 
@@ -27,7 +27,7 @@ export default function ExportOptions({
 
     try {
       // generate blob from DOM node using html-to-image library
-      const imgBlob = await toBlob(targetRef.current, {
+      const imgBlob = await toBlob(targetRef.current!, {
         pixelRatio: 2,
       });
 
@@ -75,11 +75,11 @@ export default function ExportOptions({
       let imgUrl, filename;
       switch (format) {
         case "PNG":
-          imgUrl = await toPng(targetRef.current, { pixelRatio: 2 });
+          imgUrl = await toPng(targetRef.current!, { pixelRatio: 2 });
           filename = `${name}.png`;
           break;
         case "SVG":
-          imgUrl = await toSvg(targetRef.current, { pixelRatio: 2 });
+          imgUrl = await toSvg(targetRef.current!, { pixelRatio: 2 });
           filename = `${name}.svg`;
           break;
 

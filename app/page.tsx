@@ -5,6 +5,7 @@ import { Keyboard } from "lucide-react"
 import { Resizable } from "re-resizable"
 import { useEffect, useRef, useState } from "react"
 
+import BackgroundEffects from "@/components/BackgroundEffects"
 import CodeEditor from "@/components/CodeEditor"
 import BackgroundSwitch from "@/components/controls/BackgroundSwitch"
 import DarkModeSwitch from "@/components/controls/DarkModeSwitch"
@@ -25,7 +26,6 @@ import { cn } from "@/lib/utils"
 import { fonts, themes } from "@/options"
 import { usePreferencesStore } from "@/store/use-preferences-store"
 
-// Control group wrapper component
 function ControlGroup({
   title,
   children,
@@ -52,7 +52,6 @@ function ControlGroup({
   )
 }
 
-// Separator component for horizontal layout
 function Separator({ vertical = false }: { vertical?: boolean }) {
   return vertical ? (
     <div className="my-1 h-px w-full bg-neutral-700/30" />
@@ -61,7 +60,82 @@ function Separator({ vertical = false }: { vertical?: boolean }) {
   )
 }
 
-import BackgroundEffects from "@/components/BackgroundEffects"
+function ControlsContent({
+  vertical,
+  editorRef,
+  showShortcuts,
+  setShowShortcuts,
+}: {
+  vertical: boolean
+  editorRef: React.RefObject<HTMLDivElement | null>
+  showShortcuts: boolean
+  setShowShortcuts: (v: boolean) => void
+}) {
+  return (
+    <>
+      <ControlGroup title="Content" vertical={vertical}>
+        <ImageUpload />
+      </ControlGroup>
+
+      <Separator vertical={vertical} />
+
+      <ControlGroup title="Style" vertical={vertical}>
+        <ThemeSelect />
+      </ControlGroup>
+
+      <Separator vertical={vertical} />
+
+      <ControlGroup title="Font" vertical={vertical}>
+        <FontSelect />
+        <FontSizeInput />
+      </ControlGroup>
+
+      <Separator vertical={vertical} />
+
+      <ControlGroup title="Code" vertical={vertical}>
+        <LanguageSelect />
+        <LineNumbersSwitch />
+      </ControlGroup>
+
+      <Separator vertical={vertical} />
+
+      <ControlGroup title="Canvas" vertical={vertical}>
+        <WindowFrameSelect />
+        <PaddingSlider />
+      </ControlGroup>
+
+      <Separator vertical={vertical} />
+
+      <ControlGroup title="Display" vertical={vertical}>
+        <BackgroundSwitch />
+        <DarkModeSwitch />
+      </ControlGroup>
+
+      <Separator vertical={vertical} />
+
+      <ControlGroup title="Options" vertical={vertical}>
+        <LayoutToggle />
+        <div className="flex flex-col gap-2">
+          <label className="block text-xs font-medium text-neutral-400">
+            Actions
+          </label>
+          <div className="flex items-center gap-2">
+            <ExportOptions targetRef={editorRef} />
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-9 w-9"
+              onClick={() => setShowShortcuts(!showShortcuts)}
+              title="Keyboard Shortcuts"
+            >
+              <Keyboard className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </ControlGroup>
+    </>
+  )
+}
 
 function SidePanel({
   side,
@@ -94,7 +168,7 @@ function SidePanel({
   )
 }
 
-function App() {
+export default function App() {
   const [width, setWidth] = useState("auto")
   const [showWidth, setShowWidth] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
@@ -105,7 +179,7 @@ function App() {
   const showBackground = usePreferencesStore(state => state.showBackground)
   const controlsLayout = usePreferencesStore(state => state.controlsLayout)
 
-  const editorRef = useRef(null)
+  const editorRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search)
@@ -123,83 +197,14 @@ function App() {
   }, [])
 
   const isSideLayout = controlsLayout === "left" || controlsLayout === "right"
-  const isRightLayout = controlsLayout === "right"
 
-  // Controls content - shared between layouts
-  const controlsContent = (
-    <>
-      {/* Content Group */}
-      <ControlGroup title="Content" vertical={isSideLayout}>
-        <ImageUpload />
-      </ControlGroup>
-
-      <Separator vertical={isSideLayout} />
-
-      {/* Style Group */}
-      <ControlGroup title="Style" vertical={isSideLayout}>
-        <ThemeSelect />
-      </ControlGroup>
-
-      <Separator vertical={isSideLayout} />
-
-      {/* Font Group */}
-      <ControlGroup title="Font" vertical={isSideLayout}>
-        <FontSelect />
-        <FontSizeInput />
-      </ControlGroup>
-
-      <Separator vertical={isSideLayout} />
-
-      {/* Code Group */}
-      <ControlGroup title="Code" vertical={isSideLayout}>
-        <LanguageSelect />
-        <LineNumbersSwitch />
-      </ControlGroup>
-
-      <Separator vertical={isSideLayout} />
-
-      {/* Canvas Group */}
-      <ControlGroup title="Canvas" vertical={isSideLayout}>
-        <WindowFrameSelect />
-        <PaddingSlider />
-      </ControlGroup>
-
-      <Separator vertical={isSideLayout} />
-
-      {/* Toggles Group */}
-      <ControlGroup title="Display" vertical={isSideLayout}>
-        <BackgroundSwitch />
-        <DarkModeSwitch />
-      </ControlGroup>
-
-      <Separator vertical={isSideLayout} />
-
-      {/* Layout & Export Group */}
-      <ControlGroup title="Options" vertical={isSideLayout}>
-        <LayoutToggle />
-        <div className="flex flex-col gap-2">
-          <label className="block text-xs font-medium text-neutral-400">
-            Actions
-          </label>
-          <div className="flex items-center gap-2">
-            <ExportOptions
-              targetRef={
-                editorRef as unknown as React.RefObject<HTMLDivElement>
-              }
-            />
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-9 w-9"
-              onClick={() => setShowShortcuts(!showShortcuts)}
-              title="Keyboard Shortcuts"
-            >
-              <Keyboard className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </ControlGroup>
-    </>
+  const controls = (
+    <ControlsContent
+      vertical={isSideLayout}
+      editorRef={editorRef}
+      showShortcuts={showShortcuts}
+      setShowShortcuts={setShowShortcuts}
+    />
   )
 
   return (
@@ -217,19 +222,16 @@ function App() {
 
       <BackgroundEffects />
 
-      {/* Left Side Panel */}
       {controlsLayout === "left" && (
-        <SidePanel side="left">{controlsContent}</SidePanel>
+        <SidePanel side="left">{controls}</SidePanel>
       )}
 
-      {/* Main Content Area */}
       <div
         className={cn(
           "flex flex-1 flex-col items-center justify-center gap-4 p-4",
           !isSideLayout && "min-h-screen",
         )}
       >
-        {/* Editor Area */}
         <div
           className={cn(
             "flex w-full items-center justify-center overflow-auto rounded-2xl border border-neutral-800/50 bg-neutral-900/20 p-4",
@@ -278,16 +280,14 @@ function App() {
           </Resizable>
         </div>
 
-        {/* Bottom Control Panel */}
         {!isSideLayout && (
           <Card className="w-full max-w-5xl rounded-2xl border-neutral-800/50 bg-neutral-900/70 p-5 shadow-2xl backdrop-blur-xl">
             <CardContent className="flex flex-wrap items-start justify-center gap-6 p-0">
-              {controlsContent}
+              {controls}
             </CardContent>
           </Card>
         )}
 
-        {/* Keyboard Shortcuts Panel */}
         {showShortcuts && (
           <Card className="animate-in fade-in slide-in-from-bottom-2 w-fit rounded-xl border-neutral-700/50 bg-neutral-900/90 p-4 shadow-xl backdrop-blur-xl duration-200">
             <div className="space-y-2 text-xs text-neutral-400">
@@ -309,12 +309,9 @@ function App() {
         )}
       </div>
 
-      {/* Right Side Panel */}
       {controlsLayout === "right" && (
-        <SidePanel side="right">{controlsContent}</SidePanel>
+        <SidePanel side="right">{controls}</SidePanel>
       )}
     </main>
   )
 }
-
-export default App
